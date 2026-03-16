@@ -1,0 +1,39 @@
+name: Deploy to Environment
+
+on:
+  workflow_dispatch:
+    inputs:
+      env:
+        description: 'Target Environment (LOCAL, DEV, TEST, PROD)'
+        required: true
+        default: DEV
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+
+      - name: Select environment config
+        run: |
+          if [ "${{ github.event.inputs.env }}" == "DEV" ]; then
+            CONFIG=config/dev.yaml
+          elif [ "${{ github.event.inputs.env }}" == "TEST" ]; then
+            CONFIG=config/test.yaml
+          elif [ "${{ github.event.inputs.env }}" == "PROD" ]; then
+            CONFIG=config/prod.yaml
+          else
+            CONFIG=config/local.yaml
+          fi
+          echo "Using config $CONFIG"
+          echo "CONFIG=$CONFIG" >> $GITHUB_ENV
+
+      - name: Deploy artifact
+        run: java -jar target/*.jar --spring.config.location=file:$CONFIG

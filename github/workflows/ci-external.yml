@@ -1,11 +1,11 @@
-name: CI Package Embedded Config
+name: CI Package External Config
 
 on:
   push:
     branches: [main]
 
 jobs:
-  build:
+  build-external:
     runs-on: ubuntu-latest
 
     steps:
@@ -17,8 +17,14 @@ jobs:
         with:
           java-version: '17'
 
-      - name: Build with embedded config
-        run: mvn clean package -Pembedded-config
+      - name: Build without internal YAML
+        run: mvn clean package -Pno-embedded-config
+
+      - name: Smoke test external config
+        run: |
+          java -jar target/*.jar --spring.config.location=file:./config/local.yaml &
+          sleep 15
+          curl http://localhost:8080/actuator/health
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
