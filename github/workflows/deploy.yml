@@ -13,27 +13,34 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout repository
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up JDK 17
+      # Step 2: Setup JDK 21
+      - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
+          java-version: '21'
 
+      # Step 3: Select environment config file
       - name: Select environment config
         run: |
           if [ "${{ github.event.inputs.env }}" == "DEV" ]; then
-            CONFIG=config/dev.yaml
+            CONFIG=config-templates/application-dev.yaml
           elif [ "${{ github.event.inputs.env }}" == "TEST" ]; then
-            CONFIG=config/test.yaml
+            CONFIG=config-templates/application-test.yaml
           elif [ "${{ github.event.inputs.env }}" == "PROD" ]; then
-            CONFIG=config/prod.yaml
+            CONFIG=config-templates/application-prod.yaml
           else
-            CONFIG=config/local.yaml
+            CONFIG=config-templates/application-local.yaml
           fi
           echo "Using config $CONFIG"
           echo "CONFIG=$CONFIG" >> $GITHUB_ENV
 
-      - name: Deploy artifact
-        run: java -jar target/*.jar --spring.config.location=file:$CONFIG
+      # Step 4: Deploy the artifact
+      - name: Run Spring Boot app
+        run: |
+          java -jar target/*.jar --spring.config.location=file:$CONFIG &
+          APP_PID=$!
+          echo "Spring Boot started with PID $APP_PID"

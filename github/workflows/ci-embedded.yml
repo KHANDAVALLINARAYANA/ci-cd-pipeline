@@ -2,26 +2,30 @@ name: CI Package Embedded Config
 
 on:
   push:
-    branches: [main]
+    branches: [main]  # triggers on push to main branch
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout repository
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up JDK 17
+      # Step 2: Setup Java (match your pom.xml)
+      - name: Set up JDK 21
         uses: actions/setup-java@v3
         with:
-          java-version: '17'
+          java-version: '21'
 
+      # Step 3: Build Spring Boot app with embedded YAMLs
       - name: Build with embedded config
         run: mvn clean package -Pembedded-config
 
+      # Step 4: Upload the built JAR as artifact
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: app-artifact
+          name: user4-app-artifact
           path: target/*.jar
