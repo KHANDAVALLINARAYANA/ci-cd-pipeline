@@ -1,0 +1,21 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/Jdbc
+    username: postgres
+    password: 9704
+    driver-class-name: org.postgresql.Driver
+
+  liquibase:
+    change-log: classpath:dbchangelog/db.changelog-master.xml
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+logging:
+  level:
+    root: INFO
