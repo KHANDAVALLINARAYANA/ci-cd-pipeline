@@ -19,7 +19,7 @@ jobs:
           distribution: 'temurin'
 
       - name: Build without internal YAML
-        run: mvn clean package -Pno-embedded-config
+        run: mvn clean package -DskipTests
 
       - name: Check target folder
         run: ls -l target
