@@ -2,39 +2,33 @@ name: CI Package External Config
 
 on:
   push:
-    branches: [main]  # triggers on push to main branch
+    branches: [main]
 
 jobs:
   build-external:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout repository
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      # Step 2: Setup JDK 21 (matches your pom.xml)
       - name: Set up JDK 21
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: '21'
+          distribution: 'temurin'
 
-      # Step 3: Build Spring Boot app without internal YAMLs
-      - name: Build without embedded config
-        run: mvn clean package -DskipTests
+      - name: Build without internal YAML
+        run: mvn clean package -Pno-embedded-config
 
-      # Step 4: Smoke test external config
-      - name: Smoke test external config
+      - name: Smoke test with CI config
         run: |
-          java -jar target/*.jar --spring.config.location=file:./config-templates/application-local.yaml &
-          APP_PID=$!
+          java -jar target/*.jar --spring.config.location=file:./config/application-ci.yaml &
           sleep 15
-          curl -f http://localhost:8080/actuator/health
-          kill $APP_PID
+          curl http://localhost:8080/actuator/health
 
-      # Step 5: Upload the built artifact
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3
+      - name: Upload JAR artifact
+        uses: actions/upload-artifact@v4
         with:
-          name: user4-app-artifact
+          name: user4-external-artifact
           path: target/*.jar
