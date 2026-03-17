@@ -26,8 +26,11 @@ jobs:
 
       - name: Smoke test with CI config
         run: |
-          java -jar target/*.jar --spring.config.location=file:./config-templates/application-ci.yaml &
-          sleep 25
+          echo "Starting app..."
+          java -jar target/*.jar --spring.config.location=file:./config/application-ci.yaml > app.log 2>&1 &
+          sleep 30
+          echo "App logs:"
+          cat app.log
           curl -f http://localhost:8080/actuator/health
 
       - name: Upload JAR artifact
