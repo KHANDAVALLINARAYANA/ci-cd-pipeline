@@ -46,7 +46,7 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <scope>time</scope>
+            <scope>runtime</scope>
         </dependency>
 
         <!-- Validation -->
