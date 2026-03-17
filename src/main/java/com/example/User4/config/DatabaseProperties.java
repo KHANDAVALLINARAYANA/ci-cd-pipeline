@@ -1,5 +1,6 @@
 package com.example.User4.config;
 
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
@@ -14,7 +15,7 @@ public class DatabaseProperties {
     @NotBlank(message = "Database username cannot be empty")
     private String username;
 
-    @NotBlank(message = "Database password cannot be empty")
+    @Nullable
     private String password;
 
     public String getUrl() {
