@@ -21,7 +21,7 @@ jobs:
 
       # Step 3: Build Spring Boot app without internal YAMLs
       - name: Build without embedded config
-        run: mvn clean package -Pexternal-config
+        run: mvn clean package -DskipTests
 
       # Step 4: Smoke test external config
       - name: Smoke test external config

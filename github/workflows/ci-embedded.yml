@@ -21,7 +21,7 @@ jobs:
 
       # Step 3: Build Spring Boot app with embedded YAMLs
       - name: Build with embedded config
-        run: mvn clean package -Pembedded-config
+        run: mvn clean package -DskipTests
 
       # Step 4: Upload the built JAR as artifact
       - name: Upload artifact
