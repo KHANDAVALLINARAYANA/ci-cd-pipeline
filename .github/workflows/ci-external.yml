@@ -21,11 +21,14 @@ jobs:
       - name: Build without internal YAML
         run: mvn clean package -Pno-embedded-config
 
+      - name: Check target folder
+        run: ls -l target
+
       - name: Smoke test with CI config
         run: |
-          java -jar target/*.jar --spring.config.location=file:./config/application-ci.yaml &
-          sleep 15
-          curl http://localhost:8080/actuator/health
+          java -jar target/*.jar --spring.config.location=file:./config-templates/application-ci.yaml &
+          sleep 25
+          curl -f http://localhost:8080/actuator/health
 
       - name: Upload JAR artifact
         uses: actions/upload-artifact@v4
