@@ -31,7 +31,7 @@ jobs:
           sleep 30
           echo "App logs:"
           cat app.log
-          curl -f http://localhost:8080/actuator/health
+          curl -f http://localhost:8090/actuator/health
 
       - name: Upload JAR artifact
         uses: actions/upload-artifact@v4
